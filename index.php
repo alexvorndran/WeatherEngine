@@ -36,7 +36,7 @@
 	$col_green = ImageColorAllocate($img, 0x00, 0xff, 0x00); // und gruen
 	$col_blue = ImageColorAllocate($img, 0x00, 0x00, 0xff); // und blau
 
-	$model = new WeatherModel($daysPerYear, 12, 30, 1.5, 10);
+	$model = new WeatherModel($daysPerYear, 12, 30, -1.5, 10, 10, FALSE);
 	for ($i = 0; $i < $years*$daysPerYear; $i++) {
 //		echo $model->next_temperature().'<br/>';
 		imagesetpixel($img, $i, 600-10*(20+$model->next_temperature()), $col_red);
