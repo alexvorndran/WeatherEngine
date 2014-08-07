@@ -25,27 +25,27 @@
  */
 
 	header("Content-type: image/png");
-	require_once './WeatherModel.php';
-	
+	require_once '../Weather_Model.php';
+
 	$years = 20;
 	$daysPerYear = 360;
 	$img = ImageCreate($years*$daysPerYear, 600); //erzeugen
-	$background_color = ImageColorAllocate($img, 0xaa, 0xaa, 0xaa); // Hintergrundfarbe
-	$col_black = ImageColorAllocate($img, 0x00, 0x00, 0x00); // Farbwert schwarz
-	$col_red = ImageColorAllocate($img, 0xff, 0x00, 0x00); // und rot
-	$col_green = ImageColorAllocate($img, 0x00, 0xff, 0x00); // und gruen
-	$col_blue = ImageColorAllocate($img, 0x00, 0x00, 0xff); // und blau
+	$backgroundColor = ImageColorAllocate($img, 0xaa, 0xaa, 0xaa); // Hintergrundfarbe
+	$colBlack = ImageColorAllocate($img, 0x00, 0x00, 0x00); // Farbwert schwarz
+	$colRed = ImageColorAllocate($img, 0xff, 0x00, 0x00); // und rot
+	$colGreen = ImageColorAllocate($img, 0x00, 0xff, 0x00); // und gruen
+	$colBlue = ImageColorAllocate($img, 0x00, 0x00, 0xff); // und blau
 
-	$model = new WeatherModel($daysPerYear, 12, 30, -1.5, 10, 10, FALSE);
+	$model = new Weather_Model($daysPerYear, 12, 30, -1.5, 10, 10, FALSE);
 	for ($i = 0; $i < $years*$daysPerYear; $i++) {
 //		echo $model->next_temperature().'<br/>';
-		imagesetpixel($img, $i, 600-10*(20+$model->next_temperature()), $col_red);
+		imagesetpixel($img, $i, 600-10*(20+$model->nextTemperature()), $colRed);
 	}
 	
 	for($i = $daysPerYear; $i < $years*$daysPerYear; $i+=$daysPerYear) {
-		imageline($img, $i, 0, $i, 600, $col_black);
+		imageline($img, $i, 0, $i, 600, $colBlack);
 	}
-	imageline($img, 0, 400, $years*$daysPerYear, 400, $col_blue);
+	imageline($img, 0, 400, $years*$daysPerYear, 400, $colBlue);
 	
 	ImagePNG($img);
 	imagedestroy($img);

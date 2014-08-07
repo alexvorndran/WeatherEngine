@@ -24,80 +24,80 @@
  * THE SOFTWARE.
  */
 	
-	class WeatherModel {
+	class Weather_Model {
 		// Number of days in a year
 		private $daysPerYear;
 		
-		// Stores the current temperature
-		private $current_temperature;
+		// Stores the current day temperature
+		private $currentTemperature;
 		
-		private $multiplier_year;
-		private $season_mean;
+		private $multiplierYear;
+		private $seasonMean;
 		
-		private $multiplier_variation;
-		private $variation_mean;
+		private $multiplierVariation;
+		private $variationMean;
 		
-		private $time_year;
-		private $time_variation;
+		private $timeInYear;    // time unit of the year
+		private $timeVariation;
 
-		private $variation_fraction;
+		private $variationFraction;
 		
 		// Determine if the model is for northern or southern hemisphere
 		private $northern;
 		
-		public function __construct($daysPerYear,$season_mean,$season_range,
-				$variation_mean,$varition_range,$variation_fraction=10,$northern=TRUE) {
+		public function __construct($daysPerYear,$season_mean,$seasonRange,
+				$variationMean,$variationRange,$variationFraction=10,$northern=TRUE) {
 			$this->daysPerYear = $daysPerYear;
-			// paramaters for the season cycles
-			$this->multiplier_year = $season_range/2;
-			$this->season_mean = $season_mean;
-			// paramteres for the subcycles
-			$this->multiplier_variation = $varition_range/2;
-			$this->variation_mean = $variation_mean;
-			$this->variation_fraction = $variation_fraction;
+			// parameters for the season cycles
+			$this->multiplierYear = $seasonRange/2;
+			$this->seasonMean = $season_mean;
+			// parameters for the subcycles
+			$this->multiplierVariation = $variationRange/2;
+			$this->variationMean = $variationMean;
+			$this->variationFraction = $variationFraction;
 			// random starting point
-			$this->time_year = mt_rand(-10,10);
-			$this->time_variation = mt_rand(-10,10);
+			$this->timeInYear = mt_rand(-10,10);
+			$this->timeVariation = mt_rand(-10,10);
 			// determine if the model is for the southern or the northern
 			// hemisphere
 			$this->northern = $northern;
 		}
 		
-		public function next_temperature() {
-			$this->time_year += 1;
-			$this->time_variation += $this->rand_float(-0.5, 1.0);
+		public function nextTemperature() {
+			$this->timeInYear += 1;
+			$this->timeVariation += $this->rand_float(-0.5, 1.0);
 			// up and down of the temperature caused by the seasons
 			// to model this a inverted cos-function is used
-			$temp_season = -$this->multiplier_year*cos(2*pi()*$this->time_year/$this->daysPerYear);
+			$tempSeason = -$this->multiplierYear*cos(2*pi()*$this->timeInYear/$this->daysPerYear);
 			if(!$this->northern) {
 				// for the southern hemisphere the model uses a cos-function
-				$temp_season *= -1;
+				$tempSeason *= -1;
 			}
-			$temp_season += $this->season_mean;
+			$tempSeason += $this->seasonMean;
 			// up and down of the temperature caused by randomness/weather
-			$variation_duration = $this->daysPerYear/$this->variation_fraction;
-			if($this->time_year % $this->daysPerYear == 0) {
-				// if a new year begings the subcycles may come faster or slower
-				$variation_duration += mt_rand(-$this->variation_fraction/2, $this->variation_fraction/2);
+			$variationDuration = $this->daysPerYear/$this->variationFraction;
+			if($this->timeInYear % $this->daysPerYear == 0) {
+				// if a new year begins the subcycles may come faster or slower
+				$variationDuration += mt_rand(-$this->variationFraction/2, $this->variationFraction/2);
 			}
 			// this is again modeled by a negative cos-function with
 			// random sampling instead of adding noise afterwards
-			$temp_variation = -$this->multiplier_variation*cos(2*pi()*$this->time_variation/$variation_duration);
+			$tempVariation = -$this->multiplierVariation*cos(2*pi()*$this->timeVariation/$variationDuration);
 			if(!$this->northern) {
 				// for the southern hemisphere the model uses a cos-function again
-				$temp_variation *= -1;
+				$tempVariation *= -1;
 			} 
-			$temp_variation += $this->variation_mean;
+			$tempVariation += $this->variationMean;
 			// determine the actual temperature by adding both signals
 			// save it as the current state
-			$this->current_temperature = $temp_season+$temp_variation;
+			$this->currentTemperature = $tempSeason+$tempVariation;
 			// return the calculated value
-			return $this->current_temperature;
+			return $this->currentTemperature;
 		}
 		
-		public function current_temperature() {
+		public function currentTemperature() {
 			// just return the current temperature
-			return $this->current_temperature;
+			return $this->currentTemperature;
 		}
 		
 		private function rand_float($min,$max,$mul = 1e7) {
