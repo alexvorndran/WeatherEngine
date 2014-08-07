@@ -55,3 +55,4 @@
 	
 	ImagePNG($img);
 	imagedestroy($img);
+?>
