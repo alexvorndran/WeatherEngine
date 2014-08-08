@@ -26,9 +26,9 @@
 
 	header("Content-type: image/png");
 	require_once '../temperature_model.php';
-	require_once '../humidity_model.php';
+	require_once '../rainfall_model.php';
 
-	$years = 20;
+	$years = 4;
 	$daysPerYear = 360;
 	$img = ImageCreate($years*$daysPerYear, 600); //erzeugen
 	$backgroundColor = ImageColorAllocate($img, 0xaa, 0xaa, 0xaa); // Hintergrundfarbe
@@ -37,14 +37,15 @@
 	$colGreen = ImageColorAllocate($img, 0x00, 0xff, 0x00); // und gruen
 	$colBlue = ImageColorAllocate($img, 0x00, 0x00, 0xff); // und blau
 
-	$temperatureModel = new Temperature_Model($daysPerYear, 15, 28, -1.5, 10, 10, FALSE);
-	$humidityModel = new Humidity_Model("flatland", $daysPerYear, 15, FALSE);
+	$temperatureModel = new Temperature_Model($daysPerYear, 16, 28, -1.5, 10, 10, FALSE);
+	$humidityModel = new Rainfall_Model("mountain", $daysPerYear, 15, FALSE);
 	for ($i = 0; $i < $years*$daysPerYear; $i++) {
 //		echo $model->next_temperature().'<br/>';
 		$temperature = $temperatureModel->getNextTemperature();
 		imagesetpixel($img, $i, 600-10*(20+$temperature), $colRed);
-		$humidity = $humidityModel->getNextEvaporation($temperature);
-		imageline($img, $i, 400, $i, 600-10*(20+$humidity), $colBlue);
+		$humidity = $humidityModel->getNextRainfall($temperature);
+//		imageline($img, $i, 400, $i, 600-10*(20+$humidity), $colBlue);
+		imageline($img, $i, 600, $i, 600-10*$humidity, $colBlue);
 	}
 	
 	for($i = $daysPerYear; $i < $years*$daysPerYear; $i+=$daysPerYear) {
@@ -52,6 +53,7 @@
 	}
 	imageline($img, 0, 400, $years*$daysPerYear, 400, $colBlue);
 	imageline($img, 0, 200, $years*$daysPerYear, 200, $colGreen);
+	imageline($img, 0, 500, $years*$daysPerYear, 500, $colBlack);
 	
 	ImagePNG($img);
 	imagedestroy($img);
