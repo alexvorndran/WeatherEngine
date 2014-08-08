@@ -76,6 +76,7 @@
 			// and taking the amount of water that is present as humidity 
 			// into account
 			$waterRatio = $this->_waterInTheAir/($this->_waterStored+$this->_waterInTheAir);
+			// the probability of rain is higher as more water is in the air
 			$rainProbalitity = $this->randomRainProbability()*(1+$waterRatio);
 			if($this->randFloat(0, 1) < $rainProbalitity) {
 				// let it rain
@@ -138,7 +139,7 @@
 				if($this->_biome == "flatlands" || $this->_biome == "mountains") {
 					$evaporation = 0.95*$evaporation;
 				} else {
-					$evaporation = 1.1*$evaporation;
+					$evaporation = 1.05*$evaporation;
 				}
 			} else {
 				$evaporation = 0;

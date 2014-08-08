@@ -38,7 +38,7 @@
 	$colBlue = ImageColorAllocate($img, 0x00, 0x00, 0xff); // und blau
 
 	$temperatureModel = new Temperature_Model($daysPerYear, 16, 28, -1.5, 10, 10, FALSE);
-	$humidityModel = new Rainfall_Model("mountain", $daysPerYear, 15, FALSE);
+	$humidityModel = new Rainfall_Model("flatlands", $daysPerYear, 15, FALSE);
 	for ($i = 0; $i < $years*$daysPerYear; $i++) {
 //		echo $model->next_temperature().'<br/>';
 		$temperature = $temperatureModel->getNextTemperature();
