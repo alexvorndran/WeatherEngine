@@ -53,7 +53,7 @@
 			$this->_waterStored = $this->calculateAvailableWater($area);
 			$this->_waterTotal = $this->_waterStored;
 			// set a fraction of the available water to be humidity
-			$waterShift = mt_rand(-$this->_waterStored/5, 0);
+			$waterShift = mt_rand(0,$this->_waterStored/5);
 			$this->_waterInTheAir = $waterShift;
 			$this->_waterStored -= $waterShift;
 			// days per year, e.g. for calculating a sunshine duration
@@ -83,6 +83,7 @@
 				$rainfall = $this->randFloat(0.05, 0.3)*(1+$waterRatio)*$this->_waterInTheAir;
 				$this->_waterStored += $rainfall;
 				$this->_waterInTheAir -= $rainfall;
+//				echo 'humidity: '.$this->_waterInTheAir.'<br/>';
 			} else {
 				$rainfall = 0;
 			}
@@ -92,20 +93,20 @@
 		
 		private function randomRainProbability() {
 			if($this->_biome == "desert") {
-				$mean = 0.05;
+				$baseProbability = 0.05;
 				$randomness = $this->randFloat(-0.05, 0.05);
 			} elseif($this->_biome == "mountain") {
-				$mean = 0.10;
+				$baseProbability = 0.20;
 				$randomness = $this->randFloat( 0.00, 0.10);
 			} elseif($this->_biome == "coast") {
-				$mean = 0.20;
+				$baseProbability = 0.22;
 				$randomness = $this->randFloat(-0.05, 0.10);
 			} elseif($this->_biome == "flatlands") {
-				$mean = 0.15;
+				$baseProbability = 0.18;
 				$randomness = $this->randFloat(-0.10, 0.10);
 			}
 			
-			return $mean+$randomness;
+			return $baseProbability+$randomness;
 		}
 		
 		private function calculateAvailableWater($area) {
@@ -114,11 +115,11 @@
 				case "desert":
 					return 100;
 				case "mountain":
-					return 400;
+					return 700;
 				case "coast":
-					return 600;
+					return 1000;
 				case "flatlands":
-					return 300;
+					return 500;
 				default:
 					throw new Exception("Unsupported landscape!");
 			}
